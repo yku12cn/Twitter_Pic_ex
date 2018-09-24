@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import tweepy
 import json
-from read_key import * 
 
 #Twitter API credentials
 def fetchtweets(consumer_key,consumer_secret,access_key,access_secret,twitter_name,depth):
@@ -36,19 +35,17 @@ def fetchtweets(consumer_key,consumer_secret,access_key,access_secret,twitter_na
     
     print(len(tweets_list),"tweets fetched in total")
     #output to JSON
-    file = open('tweet.json', 'w') 
+    outputfile = open("tweet.json", "w") 
     print("Output result...")
+    outputfile.write("[")
     for status in tweets_list:
-        json.dump(status._json,file,sort_keys = True,indent = 4)
+        json.dump(status._json,outputfile,indent = 4)
+        if status == tweets_list[-1]:
+            break
 
-    file.close()
+        outputfile.write(",\n")
+    
+    outputfile.write("]")
+    outputfile.close()
     print("Success!")
-
-
-if __name__ == '__main__':
-    mykeys = read_key("/home/yku12/tweepy_key.key")
-    #pass in the username of the account you want to download
-    fetchtweets(mykeys[0],mykeys[1],mykeys[2],mykeys[3],"@bing",42)
-
-
 
