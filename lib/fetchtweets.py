@@ -7,13 +7,12 @@ import json
 def fetchtweets(logkeys,twitter_name,depth,tweetsfilename):
     
     #checking input variables
-    fakeint = 1
     assert len(logkeys) == 4
-    assert type(logkeys[3])==type("")
-    assert type(twitter_name)==type("")
-    assert type(depth)==type(fakeint)
+    assert type(logkeys[3]) == str
+    assert type(twitter_name) == str
+    assert type(depth) == int
     assert depth >= 0
-    assert type(tweetsfilename)==type("")
+    assert type(tweetsfilename) == str
 
     onefetch_count = 10
     if depth < onefetch_count :
