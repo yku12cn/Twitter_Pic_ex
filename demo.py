@@ -6,8 +6,7 @@ from lib.fetchtweets import *
 from lib.downloadpic import *
 
 if __name__ == '__main__':
-    mykeys = read_key("/home/yku12/tweepy_key.key")
-    fetchtweets(mykeys[0],mykeys[1],mykeys[2],mykeys[3],"@bing",40)
-    downloadpic("tweet.json","package")
+    fetchtweets(read_key("/home/yku12/tweepy_key.key"),"@bing",1,"tweetlog.json")
+#    downloadpic("tweetlog.json","package")
 
 
