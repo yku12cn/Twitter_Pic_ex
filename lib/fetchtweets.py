@@ -7,12 +7,13 @@ import json
 def fetchtweets(logkeys,twitter_name,depth,tweetsfilename):
     
     #checking input variables
+    fakeint = 1
     assert len(logkeys) == 4
-    assert type(logkeys[3]) == str
-    assert type(twitter_name) == str
-    assert type(depth) == int
+    assert type(logkeys[3])==type("")
+    assert type(twitter_name)==type("")
+    assert type(depth)==type(fakeint)
     assert depth >= 0
-    assert type(tweetsfilename) == str
+    assert type(tweetsfilename)==type("")
 
     onefetch_count = 10
     if depth < onefetch_count :
@@ -47,18 +48,12 @@ def fetchtweets(logkeys,twitter_name,depth,tweetsfilename):
                 onefetch_count = depth-len(tweets_list)
     
         print(len(tweets_list),"tweets fetched in total")
+        
         #output to JSON
-        outputfile = open(tweetsfilename, "w") 
-        print("Output results to",tweetsfilename)
-        outputfile.write("[")
-        for status in tweets_list:
-            json.dump(status._json,outputfile,indent = 4)
-            if status == tweets_list[-1]:
-                break
-
-            outputfile.write(",\n")
-    
-        outputfile.write("]")
-        outputfile.close()
+        with open(tweetsfilename, "w") as outputfile:
+            # with statement automatically closes file handle as needed
+            print("Output results to {}".format(tweetsfilename))
+            json_list = [status._json for status in tweets_list]
+            json.dump(json_list, outputfile, indent = 4)
+        
         print("Success!")
-
