@@ -7,7 +7,10 @@ import http.cookiejar
 import re
 import os
 
-def downloadpic(jsonfile_name = "tweet.json",outputfolder="pictureset"):
+def downloadpic(jsonfile_name = "tweet.json",outputfolder="pictureset",deepsearch=0):
+    
+    fakeHeader = {}
+    fakeHeader['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
     
     #read from JSON
     print("Reading json...")
@@ -23,14 +26,25 @@ def downloadpic(jsonfile_name = "tweet.json",outputfolder="pictureset"):
             if mediapart["type"]=="photo":
                 picturelist.append(mediapart["media_url_https"])
         except:
-            pass
+            if not deepsearch == 0:
+                print("performing deep search",end="")
+                try:
+                    aherf = atweet["entities"]["urls"][0]["expanded_url"]
+                    webreq = urllib.request.Request(urllib.parse.quote(aherf,safe=';/:?='),headers=fakeHeader)
+                    resp = urllib.request.urlopen(webreq)
+                    pagecode = resp.read().decode('utf-8')
+                    aherf = re.findall(r"img data-aria-label-part src\=\"(.*?)\" alt=",pagecode)
+                    if len(aherf) > 0:
+                        print("  Success!")
+                        picturelist.append(aherf[0])
+                    else:
+                        print("  Fail..")
+                except:
+                    print("  Fail..")
 
     print("Find",len(picturelist),"pictures")
 
     print("Start downloading pictures")
-    fakeHeader = {}
-    fakeHeader['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
-
     counter = 0
     succ = 0
     if not os.path.exists("./"+outputfolder): #Create Dir
